@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System;
+using System.Data;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -9,18 +11,21 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WpfApp10
+namespace WpfApp17
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
+        int[] mas;//Описываем массив как глобальный элемент
+
+
         public MainWindow()
         {
             InitializeComponent();
+
         }
-         int[] mas;
 
         // Выход
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -28,58 +33,78 @@ namespace WpfApp10
             this.Close();
         }
 
-        // Справка
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        // О программе
+        private void Prog2_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(Environment.NewLine + "Ввести n целых чисел. Найти сумму чисел >15. Результат вывести на экран.");
+            MessageBox.Show("Ввести n целых чисел. Найти сумму чисел > 15. Результат вывести на экран.");
         }
 
         // Создание массива
-        private void Rasch_Click(object sender, RoutedEventArgs e)
+        private void miCreate_Click(object sender, RoutedEventArgs e)
+
         {
-            int count = Convert.ToInt32(Tabl);
+
+            //Получаемм количество ячеек в массиве
+            int count = Convert.ToInt32(tbCount.Text);
             mas = new int[count];
-            Tabl.ItemsSource = VisualArray.ToDataTable(mas).DefaultView;
+            for (int i = 0; i < count; i++)
+                //Выводим массив на форму
+                dataGrid.ItemsSource = VisualArray.ToDataTable(mas).DefaultView;
+
         }
 
-
-
         // Заполнение массива
-        private void Button_Click_2(object sender, RoutedEventArgs e)
+        private void miFill_Click(object sender, RoutedEventArgs e)
         {
-            //получание диапозон 
-            int randMax = Convert.ToInt32(Tabl);
-            // количество ячеек
-            int Count = Convert.ToInt32(Tabl);
+            if (mas == null)
+            {
+                MessageBox.Show("Сначала создайте массив.");
+                return;
+            }
+            //Получаем количество ячеек в массиве
+            int count = Convert.ToInt32(tbCount.Text);
+            //Получаем диапозон случайных чисел
+            int max = Convert.ToInt32(randMax.Text);
+            mas = new int[count];//Создаем массив
+            Random rnd = new Random();
+            //Заполняем таблицу случайными значениями
+            for (int i = 0; i < mas.Length; i++)
+            {
+                mas[i] = rnd.Next(max);
+                //Выводим массив на форму
+                dataGrid.ItemsSource = VisualArray.ToDataTable(mas).DefaultView;
+            }
+            tbRez.Text = "";
+
+
         }
 
         // Очистка
-        private void Button_Click_3(object sender, RoutedEventArgs e)
+        private void miClear_Click(object sender, RoutedEventArgs e)
         {
-            Tabl = null;
+            dataGrid.ItemsSource = null;
             mas = null;
-
+            tbRez.Text = "";
         }
 
-        // Расчёт суммы чисел меньше 15
-        private void Button_Click_4(object sender, RoutedEventArgs e)
+        // Решение (сумма чисел >15)
+        private void miCalc_Click(object sender, RoutedEventArgs e)
         {
-            int sum = 0;
-            if (mas != null)
+            if (mas == null || mas.Length == 0)
             {
-                for (int i = 0; i < mas.Length; i++)
-                {
-                    if (mas[i] < 15)
-                        sum += mas[i];
-                }
-                tbRez.Text = sum.ToString();
+                MessageBox.Show("Сначала создайте и заполните массив.");
+                return;
             }
+
+            int sum = 0;
+            // Проходим по каждому элементу массива 'mas'
+            foreach (int val in mas)
+                if (val > 15)
+                    sum += val;
+
+            tbRez.Text = sum.ToString(); // Ввывод ответа
         }
 
-        private void Prog2_Click(object sender, RoutedEventArgs e)
-        {
 
-        }
     }
 }
-

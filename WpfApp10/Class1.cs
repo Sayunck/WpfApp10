@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WpfApp10
+namespace WpfApp17
 {
 
     //Класс для связывания массива с элементом DataGrid
